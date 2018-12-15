@@ -1,0 +1,49 @@
+<?import javafx.geometry.Insets?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.TextField?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TextArea?>
+<BorderPane fx:controller="sample.Controller"
+            xmlns:fx="http://javafx.com/fxml">
+    <padding>
+        <Insets top="20"/>
+    </padding>
+    <left>
+        <HBox maxWidth="300">
+            <padding>
+                <Insets top="15"/>
+            </padding>
+            <ListView fx:id="listView">
+
+            </ListView>
+        </HBox>
+    </left>
+    <top>
+        <HBox alignment="center"><Label>This is P2P</Label></HBox>
+    </top>
+    <center>
+        <VBox spacing="10" maxWidth="500">
+            <padding>
+                <Insets top="15" left="30"/>
+            </padding>
+            <TextField fx:id="field"/>
+
+            <TextArea fx:id="textArea" editable="false"></TextArea>
+            <Button text="Send" onAction="#onButtonClicked"/>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox>
+            <Button text="Download DHT" onAction="#onButtonClicked1"/>
+        </HBox>
+    </bottom>
+
+
+</BorderPane>
