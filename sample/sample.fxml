@@ -40,8 +40,11 @@
     </center>
 
     <bottom>
-        <HBox>
-            <Button text="Download DHT" onAction="#onButtonClicked1"/>
+        <HBox alignment="center">
+            <padding>
+                <Insets bottom="10"/>
+            </padding>
+            <Button style="-fx-background-color:DodgerBlue; -fx-hovered-background: red;" text="Download DHT" onAction="#onButtonClicked1"/>
         </HBox>
     </bottom>
 

@@ -11,19 +11,23 @@ public class Client implements Runnable{
     private OutputStream os;
     private static ObjectOutputStream output;
     private InputStream is;
-    private String ip;
+    private Message connectionMessage;
     private Socket socket;
     Scanner scanner;
     private Controller controller;
 
     public Client(){
+        connectionMessage = new Message();
         scanner = new Scanner(System.in);
     }
 
     public void run(){
-        this.ip = scanner.next();
+        this.connectionMessage.setMessage(scanner.next());
+        this.connectionMessage.setType(MessageType.DHT);
+
         try{
             socket = new Socket("localhost", 5000);
+            this.connectionMessage.setIP(socket.getRemoteSocketAddress().toString());
             os = socket.getOutputStream();//kanal iz kojeg teku podatci do servera
             output = new ObjectOutputStream(os);//to je kanal koji može slati objekte
             is = socket.getInputStream();//kanal iz kojeg dolaze podatci od servera
@@ -52,7 +56,7 @@ public class Client implements Runnable{
 //        }
 
         try{
-            connect(ip);
+            connect(connectionMessage);
             while(socket.isConnected()){
                 Message message = null;
                 message = (Message) input.readObject();
@@ -66,7 +70,7 @@ public class Client implements Runnable{
                             System.out.println(message.getIP() + " just disconnected.");
                             break;
                         case MESSAGE:
-                            if(!message.getIP().equals(ip))
+                            if(!message.getIP().equals(connectionMessage.getIP()))
                                 System.out.println(message.getIP() + " : " + message.getMessage());
                             else
                                 System.out.println(message.getMessage());
@@ -76,7 +80,9 @@ public class Client implements Runnable{
                             //tu dok šaljem poruku trebam na neki način napravit da mogu odabrati dht
                             //ili bolje rješenje bi bilo da imam button koji pukne serveru poruku
                             //daj šibni listu ip adresa i čvorova koji djele file-ove
-                            System.out.println("Server je posalo DHT tablicu:\n" + message.getIP());
+                            System.out.println(message.getIP() + "\n\n\n" + message.getMessage());
+                            Controller.updateListView(message);
+                            //System.out.println("Server je posalo DHT tablicu:\n" + message.getIP());
                             break;
                     }
                 }
@@ -91,19 +97,18 @@ public class Client implements Runnable{
         //Message createMessage = new Message();
         //createMessage.setIP(msg);
         //createMessage.setFile("fizicki file");
-        Message msgToSend = new Message(MessageType.MESSAGE, ip, msg);
+        Message msgToSend = new Message(MessageType.MESSAGE, connectionMessage.getIP(), msg);
         output.writeObject(msgToSend);
         output.flush();
     }
 
     public void sendDHTRequest()throws IOException{
-        Message getDHTMessage = new Message(MessageType.DHT, ip);
+        Message getDHTMessage = new Message(MessageType.DHT, connectionMessage.getIP());
         output.writeObject(getDHTMessage);
         output.flush();
     }
 
-    public static void connect(String ip)throws IOException{
-        Message msg = new Message(MessageType.CONNECT, ip, "Connect me to the server");
+    public static void connect(Message msg)throws IOException{
         output.writeObject(msg);
     }
 }
