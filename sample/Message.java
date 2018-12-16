@@ -32,17 +32,13 @@ public class Message implements Serializable {
         return this.ip;
     }
 
-    public void setMessage(String message){
-        this.message = message;
-    }
+    public void setMessage(String message){ this.message = message; }
 
     public String getMessage(){
         return this.message;
     }
 
-    public MessageType getType() {
-        return type;
-    }
+    public MessageType getType() { return type; }
 
     public void setType(MessageType type) {
         this.type = type;
@@ -52,4 +48,11 @@ public class Message implements Serializable {
     public String toString(){
         return this.type + ":" + this.ip + ":" + this.message;
     }
+
+
+    public void append(Message dataToAppend){
+        this.ip = getIP() + "%" + dataToAppend.getIP();
+        this.message = getMessage() + "%" + dataToAppend.getMessage();
+    }
+
 }
