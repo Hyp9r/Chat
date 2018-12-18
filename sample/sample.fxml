@@ -32,6 +32,8 @@
             <padding>
                 <Insets top="15" left="30"/>
             </padding>
+            <TextField fx:id="connectField"/>
+            <Button text="connect" onAction="#firstMessage"/>
             <TextField fx:id="field"/>
 
             <TextArea fx:id="textArea" editable="false"></TextArea>

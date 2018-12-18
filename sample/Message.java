@@ -51,8 +51,16 @@ public class Message implements Serializable {
 
 
     public void append(Message dataToAppend){
-        this.ip = getIP() + "%" + dataToAppend.getIP();
-        this.message = getMessage() + "%" + dataToAppend.getMessage();
+        StringBuilder sb = new StringBuilder();
+        sb.append(getIP());
+        sb.append("%");
+        sb.append(dataToAppend.getIP());
+        this.ip = sb.toString();
+        StringBuilder sb1 = new StringBuilder();
+        sb1.append(getMessage());
+        sb1.append("%");
+        sb1.append(dataToAppend.getMessage());
+        this.message = sb1.toString();
     }
 
 }

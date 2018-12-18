@@ -1,5 +1,5 @@
 package sample;
 
 public enum MessageType {
-    CONNECT, MESSAGE, DISCONNECT, DHT
+    CONNECT, MESSAGE, DISCONNECT, DHT, METADATA
 }

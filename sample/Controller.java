@@ -10,6 +10,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,6 +24,9 @@ import java.util.Observable;
 public class Controller {
 
     @FXML
+    private TextField connectField;
+
+    @FXML
     private TextField field;
     @FXML
     private static TextArea textArea;
@@ -33,6 +37,15 @@ public class Controller {
     private Thread x = new Thread(client);
     //private List<Message> list = new ArrayList<Message>();
 
+    @FXML
+    public void firstMessage(){
+        String data = connectField.getText();
+        try{
+            client.sendConnectionMessage(data);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
     @FXML
     public void onButtonClicked(){
         String dataToSend = field.getText();
