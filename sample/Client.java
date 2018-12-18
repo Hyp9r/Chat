@@ -15,19 +15,22 @@ public class Client implements Runnable{
     private Socket socket;
     Scanner scanner;
     private Controller controller;
+    private String ip;
+    private String file;
 
     public Client(){
         connectionMessage = new Message();
-        scanner = new Scanner(System.in);
+        //scanner = new Scanner(System.in);
     }
 
     public void run(){
-        this.connectionMessage.setMessage(scanner.next());
-        this.connectionMessage.setType(MessageType.DHT);
+        //this.connectionMessage.setMessage(scanner.next());
+        this.connectionMessage.setType(MessageType.CONNECT);
 
         try{
             socket = new Socket("localhost", 5000);
             this.connectionMessage.setIP(socket.getRemoteSocketAddress().toString());
+            this.ip = socket.getRemoteSocketAddress().toString();
             os = socket.getOutputStream();//kanal iz kojeg teku podatci do servera
             output = new ObjectOutputStream(os);//to je kanal koji može slati objekte
             is = socket.getInputStream();//kanal iz kojeg dolaze podatci od servera
@@ -56,7 +59,7 @@ public class Client implements Runnable{
 //        }
 
         try{
-            connect(connectionMessage);
+            //connect(connectionMessage);
             while(socket.isConnected()){
                 Message message = null;
                 message = (Message) input.readObject();
@@ -80,9 +83,12 @@ public class Client implements Runnable{
                             //tu dok šaljem poruku trebam na neki način napravit da mogu odabrati dht
                             //ili bolje rješenje bi bilo da imam button koji pukne serveru poruku
                             //daj šibni listu ip adresa i čvorova koji djele file-ove
-                            System.out.println(message.getIP() + "\n\n\n" + message.getMessage());
+                            System.out.println(message.getIP() + "\n\n" + message.getMessage());
                             Controller.updateListView(message);
                             //System.out.println("Server je posalo DHT tablicu:\n" + message.getIP());
+                            break;
+                        case METADATA:
+                            repeatMetadata(file);
                             break;
                     }
                 }
@@ -110,5 +116,20 @@ public class Client implements Runnable{
 
     public static void connect(Message msg)throws IOException{
         output.writeObject(msg);
+    }
+
+    public static void clientDisconnect(){
+        System.exit(0);
+    }
+
+    public void sendConnectionMessage(String msg) throws IOException{
+        this.file = msg;
+        Message cm = new Message(MessageType.CONNECT, ip, msg);
+        output.writeObject(cm);
+    }
+
+    private void repeatMetadata(String file)throws IOException{
+        Message cm = new Message(MessageType.CONNECT, ip, file);
+        output.writeObject(cm);
     }
 }
